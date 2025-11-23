@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcul des Charges Incorporables (CAGE) - Hino Coding Lab (HCL)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        .resultat-final {
+            background-color: #d1ecf1;
+            padding: 15px;
+            border: 1px solid #bee5eb;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        .positif { color: green; }
+        .negatif { color: red; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Analyse et Calcul des Charges Incorporables (CAGE)</h1>
+        <p>Société "Aimons-nous" - Données du premier trimestre (en FCFA).</p>
+
+        <!-- Section 1: Charges Générales (Inputs) -->
+        <h2>1. Charges du Compte Général</h2>
+        <table id="table-charges-generales">
+            <thead>
+                <tr>
+                    <th>Compte</th>
+                    <th>Intitulé</th>
+                    <th>Montant (FCFA)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Les lignes seront remplies par JS ou hardcodées pour l'affichage -->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"><strong>Total des Charges Générales</strong></td>
+                    <td id="total-cg">0 FCFA</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- Section 2: Retraitements Analytiques -->
+        <h2>2. Retraitements Analytiques</h2>
+        
+        <h3>2.1 Charges Non-Incorporables (CNI)</h3>
+        <table id="table-cni">
+            <thead>
+                <tr>
+                    <th>Élément</th>
+                    <th>Source</th>
+                    <th>Montant (FCFA)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Frais financiers (67)</td>
+                    <td>Exclu analytiquement</td>
+                    <td id="cni-financiers" class="negatif"></td>
+                    <td>Soustraire</td>
+                </tr>
+                <tr>
+                    <td>Dotations aux provisions (69)</td>
+                    <td>Exclu analytiquement</td>
+                    <td id="cni-provisions" class="negatif"></td>
+                    <td>Soustraire</td>
+                </tr>
+                <tr>
+                    <td>Taxes/Sous-activité</td>
+                    <td>Charges récupérables et sous-activité</td>
+                    <td id="cni-taxes" class="negatif"></td>
+                    <td>Soustraire</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"><strong>Total des CNI à soustraire</strong></td>
+                    <td id="total-cni" class="negatif">0 FCFA</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <h3>2.2 Charges Supplétives (CS)</h3>
+        <table id="table-cs">
+            <thead>
+                <tr>
+                    <th>Élément</th>
+                    <th>Calcul/Base</th>
+                    <th>Montant (FCFA)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Rémunération du capital</td>
+                    <td>8% sur 2 000 000</td>
+                    <td id="cs-capital" class="positif"></td>
+                    <td>Ajouter</td>
+                </tr>
+                <tr>
+                    <td>Rémunération AngelebanT</td>
+                    <td>1 200 000 FCFA estimé</td>
+                    <td id="cs-dirigeant" class="positif"></td>
+                    <td>Ajouter</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"><strong>Total des CS à ajouter</strong></td>
+                    <td id="total-cs" class="positif">0 FCFA</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- Section 3: Résultat Final -->
+        <h2>3. Charges Incorporables (CAGE)</h2>
+        <div class="resultat-final">
+            <p>Total des Charges à Répartir (CG - CNI + CS) : <span id="resultat-final"></span></p>
+        </div>
+
+    </div>
+
+    <script>
+        // === LOGIQUE JAVASCRIPT / TYPESCRIPT CONVERTIE ===
+
+        const UNITE_MONETAIRE = "FCFA";
+
+        // DONNÉES DE L'EXERCICE (en FCFA)
+        const donneesCharges = {
+            '61 : Transport': 125000,
+            '62 : Services extérieurs A': 100000,
+            '63 : Services extérieurs B': 25000,
+            '64 : Impôts et taxes': 105000,
+            '65 : Autres charges': 115000,
+            '66 : Charge de personnel': 45000,
+            '67 : Frais financiers': 90000,
+            '68 : Dotations aux amortissements': 40000,
+            '69 : Dotations aux provisions': 45000
+        };
+
+        const CAPITAL_SOCIAL = 2000000;
+        const TAUX_CAPITAL = 0.08; // 8%
+
+        // 1. Calculer le total des charges générales
+        const totalChargesGenerales = Object.values(donneesCharges).reduce((sum, current) => sum + current, 0);
+
+        // 2. Calculer les Charges Non-Incorporables (CNI)
+        const CNI_fraisFinanciers = donneesCharges['67 : Frais financiers']; // 90 000
+        const CNI_provisions = donneesCharges['69 : Dotations aux provisions']; // 45 000
+        const CNI_taxesSousActivite = 30000; // Mentionné dans les informations complémentaires
+        const totalCNI = CNI_fraisFinanciers + CNI_provisions + CNI_taxesSousActivite;
+
+        // 3. Calculer les Charges Supplétives (CS)
+        const CS_remunerationCapital = CAPITAL_SOCIAL * TAUX_CAPITAL; // 160 000
+        const CS_remunerationDirigeant = 1200000; // Mentionné dans les informations complémentaires
+        const totalCS = CS_remunerationCapital + CS_remunerationDirigeant;
+
+        // 4. Calculer les Charges Incorporables (CAGE)
+        const chargesIncorporables = totalChargesGenerales - totalCNI + totalCS;
+        // 690 000 - 165 000 + 1 360 000 = 1 885 000 FCFA
+
+        // === RENDU HTML ===
+        
+        function formatFCFA(montant) {
+            return montant.toLocaleString('fr-FR') + ' ' + UNITE_MONETAIRE;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Remplissage du Tableau des Charges Générales
+            const tbodyCG = document.querySelector('#table-charges-generales tbody');
+            for (const [intitule, montant] of Object.entries(donneesCharges)) {
+                const row = tbodyCG.insertRow();
+                const compte = intitule.split(':').trim();
+                const nom = intitule.split(':').trim();
+                row.insertCell().textContent = compte;
+                row.insertCell().textContent = nom;
+                row.insertCell().textContent = formatFCFA(montant);
+            }
+            document.getElementById('total-cg').textContent = formatFCFA(totalChargesGenerales);
+
+            // Remplissage du Tableau CNI
+            document.getElementById('cni-financiers').textContent = formatFCFA(CNI_fraisFinanciers);
+            document.getElementById('cni-provisions').textContent = formatFCFA(CNI_provisions);
+            document.getElementById('cni-taxes').textContent = formatFCFA(CNI_taxesSousActivite);
+            document.getElementById('total-cni').textContent = formatFCFA(totalCNI);
+
+            // Remplissage du Tableau CS
+            document.getElementById('cs-capital').textContent = formatFCFA(CS_remunerationCapital);
+            document.getElementById('cs-dirigeant').textContent = formatFCFA(CS_remunerationDirigeant);
+            document.getElementById('total-cs').textContent = formatFCFA(totalCS);
+
+            // Affichage du Résultat Final
+            document.getElementById('resultat-final').textContent = formatFCFA(chargesIncorporables);
+        });
+    </script>
+</body>
+</html>
