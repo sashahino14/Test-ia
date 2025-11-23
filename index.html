@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,235 +5,335 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Analytica2 - Hino Coding Lab (HCL)</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
-            color: #333;
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --bg-light: #f8f9fa;
+            --text-dark: #212529;
+            --border-color: #dee2e6;
         }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
         .container {
-            max-width: 900px;
-            margin: auto;
-            background: white;
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-        h1, h2, h3 {
-            color: #0056b3;
-            border-bottom: 2px solid #eee;
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        h2 {
+            color: var(--secondary-color);
+            margin-top: 25px;
             padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
         }
+        
+        h3 {
+            color: var(--success-color);
+            margin-top: 15px;
+        }
+
+        .section-box {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+
+        .explanation {
+            background-color: #e9ecef;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--primary-color);
+            font-size: 0.9em;
+        }
+        
+        .calculation-step {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #f1f3f5;
+            border-radius: 4px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-top: 15px;
         }
+
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             padding: 10px;
             text-align: left;
         }
+        
         th {
-            background-color: #f0f0f0;
+            background-color: #e0e0e0;
         }
-        .resultat-final {
-            background-color: #d1ecf1;
-            padding: 15px;
-            border: 1px solid #bee5eb;
+
+        .result-final {
             font-size: 1.5em;
             font-weight: bold;
             text-align: center;
-            margin-top: 20px;
-            border-radius: 5px;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: var(--success-color);
+            color: white;
+            border-radius: 6px;
         }
-        .positif { color: green; }
-        .negatif { color: red; }
+        
+        .citation {
+            font-size: 0.7em;
+            color: var(--secondary-color);
+            display: block;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h1>Analyse et Calcul des Charges Incorporables (CAGE)</h1>
-        <p>Société "Aimons-nous" - Données du premier trimestre (en FCFA).</p>
-
-        <!-- Section 1: Charges Générales (Inputs) -->
-        <h2>1. Charges du Compte Général</h2>
-        <table id="table-charges-generales">
-            <thead>
-                <tr>
-                    <th>Compte</th>
-                    <th>Intitulé</th>
-                    <th>Montant (FCFA)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Les lignes seront remplies par JS ou hardcodées pour l'affichage -->
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2"><strong>Total des Charges Générales</strong></td>
-                    <td id="total-cg">0 FCFA</td>
-                </tr>
-            </tfoot>
-        </table>
-
-        <!-- Section 2: Retraitements Analytiques -->
-        <h2>2. Retraitements Analytiques</h2>
+        <h1>Outil de Calcul de la CAGE</h1>
+        <h2>Ajustement des Charges pour le Coût de Revient Analytique</h2>
         
-        <h3>2.1 Charges Non-Incorporables (CNI)</h3>
-        <table id="table-cni">
-            <thead>
-                <tr>
-                    <th>Élément</th>
-                    <th>Source</th>
-                    <th>Montant (FCFA)</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Frais financiers (67)</td>
-                    <td>Exclu analytiquement</td>
-                    <td id="cni-financiers" class="negatif"></td>
-                    <td>Soustraire</td>
-                </tr>
-                <tr>
-                    <td>Dotations aux provisions (69)</td>
-                    <td>Exclu analytiquement</td>
-                    <td id="cni-provisions" class="negatif"></td>
-                    <td>Soustraire</td>
-                </tr>
-                <tr>
-                    <td>Taxes/Sous-activité</td>
-                    <td>Charges récupérables et sous-activité</td>
-                    <td id="cni-taxes" class="negatif"></td>
-                    <td>Soustraire</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2"><strong>Total des CNI à soustraire</strong></td>
-                    <td id="total-cni" class="negatif">0 FCFA</td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
-        
-        <h3>2.2 Charges Supplétives (CS)</h3>
-        <table id="table-cs">
-            <thead>
-                <tr>
-                    <th>Élément</th>
-                    <th>Calcul/Base</th>
-                    <th>Montant (FCFA)</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Rémunération du capital</td>
-                    <td>8% sur 2 000 000</td>
-                    <td id="cs-capital" class="positif"></td>
-                    <td>Ajouter</td>
-                </tr>
-                <tr>
-                    <td>Rémunération AngelebanT</td>
-                    <td>1 200 000 FCFA estimé</td>
-                    <td id="cs-dirigeant" class="positif"></td>
-                    <td>Ajouter</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2"><strong>Total des CS à ajouter</strong></td>
-                    <td id="total-cs" class="positif">0 FCFA</td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
-
-        <!-- Section 3: Résultat Final -->
-        <h2>3. Charges Incorporables (CAGE)</h2>
-        <div class="resultat-final">
-            <p>Total des Charges à Répartir (CG - CNI + CS) : <span id="resultat-final"></span></p>
+        <div class="explanation">
+            L'objectif est de calculer la **Charge de la Comptabilité Générale ajustée (CAGE)** pour le premier trimestre 2025 de la société "Aimons-nous". La CAGE est fondamentale pour obtenir le coût de revient analytique.
+            <br>
+            **Formule de base :** CAGE = TCG (Charge de la Compte G) - CNI + CS.
         </div>
 
+        <!-- Section 1: TCG -->
+        <div class="section-box">
+            <h3>Étape 1 : Calcul du Total des Charges Générales (TCG)</h3>
+            <div class="explanation">
+                Le TCG représente l'ensemble des charges enregistrées par la Comptabilité Générale (CG).
+                <span class="citation">[Source: 7, 8, 20]</span>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Compte</th>
+                        <th>Description</th>
+                        <th>Montant</th>
+                    </tr>
+                </thead>
+                <tbody id="table-tcg">
+                    <!-- Data will be inserted by JS -->
+                </tbody>
+            </table>
+            
+            <div class="calculation-step">
+                **Procédé de calcul :** Somme des comptes 61 à 69.
+                <br>
+                TCG = 125 000 + 100 000 + 85 000 + 105 000 + 115 000 + 75 000 + 90 000 + 40 000 + 45 000
+                <br>
+                **Résultat TCG :** <strong id="result-tcg"></strong>
+            </div>
+        </div>
+
+        <!-- Section 2: CNI -->
+        <div class="section-box">
+            <h3>Étape 2 : Calcul des Charges Non Incorporables (CNI)</h3>
+            <div class="explanation">
+                Les CNI sont des charges qui **ne sont pas liées au cycle d'exploitation** et qui n'opèrent pas aux conditions normales. Elles sont soustraites du TCG. Exemples de CNI : Charges hors activités ordinaires (CHAO), taxes récupérables, impôts sur le bénéfice.
+                <span class="citation">[Source: 3, 6, 7, 8, 14]</span>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Élément CNI</th>
+                        <th>Base/Calcul</th>
+                        <th>Montant</th>
+                    </tr>
+                </thead>
+                <tbody id="table-cni">
+                    <!-- Data will be inserted by JS -->
+                </tbody>
+            </table>
+
+            <div class="calculation-step">
+                **Procédé de calcul CNI :**
+                <br>
+                CNI = Partie des provisions + Taxes récupérables + Amortissements hors activité.
+                <br>
+                CNI = 25 000 + 36 750 + 30 000
+                <br>
+                **Résultat CNI :** <strong id="result-cni"></strong>
+            </div>
+        </div>
+
+        <!-- Section 3: CS -->
+        <div class="section-box">
+            <h3>Étape 3 : Calcul des Charges Supplétives (CS)</h3>
+            <div class="explanation">
+                Les CS sont des charges **imaginaires** non gérées par la comptabilité générale mais prises en compte dans le calcul analytique. Elles sont ajoutées au TCG. **CS = RTCP + RFE**.
+                <span class="citation">[Source: 4, 5, 6, 15, 16]</span>
+            </div>
+            
+            <h4>A. Rémunération Théorique des Capitaux Propres (RTCP)</h4>
+            <div class="explanation">
+                La RTCP raisonne comme si l'entreprise avait emprunté l'argent. La formule utilise 1200 au dénominateur car le taux est donné en mois/année.
+                <span class="citation">[Source: 4, 6, 9, 15]</span>
+            </div>
+            <div class="calculation-step">
+                **Données :** Capital = 2 000 000. Taux annuel = 8%. Période = 3 mois (Trimestre).
+                <br>
+                **Formule RTCP :** $(\text{Capital} \times \text{Taux} \times \text{Période (mois)}) / 1200$.
+                <br>
+                RTCP = (2 000 000 * 8 * 3) / 1200 = **<span id="result-rtcp"></span>**
+            </div>
+            
+            <h4>B. Rémunération Fictive de l'Exploitant (RFE)</h4>
+            <div class="explanation">
+                Rémunération que l'exploitant perçoit, mais qui n'est pas un salaire au sens comptable. L'ajustement est nécessaire pour faire correspondre le montant à la période trimestrielle (3 mois).
+                <span class="citation">[Source: 2, 4, 10, 16]</span>
+            </div>
+            <div class="calculation-step">
+                **Données :** Rémunération semestrielle (6 mois) = 1 200 000. Période recherchée = 3 mois.
+                <br>
+                **Procédé RFE :** $1 200 000 \times (3 / 6)$.
+                <br>
+                RFE = **<span id="result-rfe"></span>**
+            </div>
+
+            <div class="calculation-step">
+                **Résultat Total CS :** CS = RTCP + RFE = <strong id="result-cs"></strong>
+            </div>
+        </div>
+
+        <!-- Section 4: CAGE -->
+        <div class="section-box">
+            <h3>Étape 4 : Calcul Final de la CAGE</h3>
+            <div class="explanation">
+                La Charge Incorporable (CI) est l'ensemble des charges prises en compte dans le calcul des coûts.
+                <br>
+                **Formule finale :** CAGE = TCG - CNI + CS.
+                <span class="citation">[Source: 6, 7, 8, 18]</span>
+            </div>
+
+            <div class="calculation-step">
+                CAGE = <span id="final-tcg-calc"></span> - <span id="final-cni-calc"></span> + <span id="final-cs-calc"></span>
+                <br>
+                CAGE = 688 250 + 640 000
+            </div>
+        </div>
+
+        <div class="result-final">
+            MONTANT FINAL DE LA CAGE (1er Trimestre 2025) : <span id="result-final-cage"></span>
+        </div>
+        
+        <div class="explanation" style="margin-top: 20px;">
+            **Interprétation (Métaphore) :** La TCG est le panier d'épicerie complet. Les CNI (91 750) sont les épluchures retirées, et les CS (640 000) sont les ingrédients secrets ajoutés pour obtenir la CAGE (1 328 250), la valeur exacte pour calculer le prix de revient final.
+            <span class="citation">[Source: 11]</span>
+        </div>
     </div>
 
     <script>
-        // === LOGIQUE JAVASCRIPT / TYPESCRIPT CONVERTIE ===
+        document.addEventListener('DOMContentLoaded', function() {
+            // Données de l'exercice (Sources 7, 8, 9, 10, 20)
+            const chargesGenerales = [
+                { compte: 61, description: "Transport", montant: 125000 },
+                { compte: 62, description: "Services extérieurs A", montant: 100000 },
+                { compte: 63, description: "Services extérieurs B", montant: 85000 },
+                { compte: 64, description: "Impôts et Taxes", montant: 105000 },
+                { compte: 65, description: "Autres charges", montant: 115000 },
+                { compte: 66, description: "Charge de personnel", montant: 75000 },
+                { compte: 67, description: "Frais financiers", montant: 90000 },
+                { compte: 68, description: "Dotation aux amortissements", montant: 40000 },
+                { compte: 69, description: "Dotation aux provisions", montant: 45000 }
+            ];
 
-        const UNITE_MONETAIRE = "FCFA";
+            // --- Étape 1: Calcul TCG ---
+            const TCG = chargesGenerales.reduce((sum, charge) => sum + charge.montant, 0); // 780 000
+            document.getElementById('result-tcg').textContent = TCG.toLocaleString('fr-FR') + ' p';
 
-        // DONNÉES DE L'EXERCICE (en FCFA)
-        const donneesCharges = {
-            '61 : Transport': 125000,
-            '62 : Services extérieurs A': 100000,
-            '63 : Services extérieurs B': 25000,
-            '64 : Impôts et taxes': 105000,
-            '65 : Autres charges': 115000,
-            '66 : Charge de personnel': 45000,
-            '67 : Frais financiers': 90000,
-            '68 : Dotations aux amortissements': 40000,
-            '69 : Dotations aux provisions': 45000
-        };
+            // Affichage de la table TCG
+            const tableTCG = document.getElementById('table-tcg');
+            chargesGenerales.forEach(c => {
+                const row = tableTCG.insertRow();
+                row.insertCell().textContent = c.compte;
+                row.insertCell().textContent = c.description;
+                row.insertCell().textContent = c.montant.toLocaleString('fr-FR');
+            });
+            const totalRow = tableTCG.insertRow();
+            totalRow.insertCell().innerHTML = '<strong>TCG</strong>';
+            totalRow.insertCell().textContent = 'Total des Charges Générales';
+            totalRow.insertCell().innerHTML = `<strong>${TCG.toLocaleString('fr-FR')}</strong>`;
+            totalRow.style.backgroundColor = '#e6ffed';
 
-        const CAPITAL_SOCIAL = 2000000;
-        const TAUX_CAPITAL = 0.08; // 8%
+            // --- Étape 2: Calcul CNI ---
+            const taxesRecuperables = 105000 * 0.35; // 36 750
+            const provisionsCNI = 25000; //
+            const amortissementsCNI = 30000; // Amortissements hors activité
+            const CNI = provisionsCNI + taxesRecuperables + amortissementsCNI; // 91 750
 
-        // 1. Calculer le total des charges générales
-        const totalChargesGenerales = Object.values(donneesCharges).reduce((sum, current) => sum + current, 0);
+            document.getElementById('result-cni').textContent = CNI.toLocaleString('fr-FR') + ' p';
 
-        // 2. Calculer les Charges Non-Incorporables (CNI)
-        const CNI_fraisFinanciers = donneesCharges['67 : Frais financiers']; // 90 000
-        const CNI_provisions = donneesCharges['69 : Dotations aux provisions']; // 45 000
-        const CNI_taxesSousActivite = 30000; // Mentionné dans les informations complémentaires
-        const totalCNI = CNI_fraisFinanciers + CNI_provisions + CNI_taxesSousActivite;
+            // Affichage de la table CNI
+            const tableCNI = document.getElementById('table-cni');
+            const cniData = [
+                { element: "Partie des provisions (69)", calcul: "Donnée", montant: provisionsCNI },
+                { element: "Taxes Récupérables (64)", calcul: `105 000 x 35%`, montant: taxesRecuperables },
+                { element: "Amortissements hors activité (68)", calcul: "Donnée", montant: amortissementsCNI }
+            ];
+            cniData.forEach(c => {
+                const row = tableCNI.insertRow();
+                row.insertCell().textContent = c.element;
+                row.insertCell().textContent = c.calcul;
+                row.insertCell().textContent = c.montant.toLocaleString('fr-FR');
+            });
+            const totalCNIRow = tableCNI.insertRow();
+            totalCNIRow.insertCell().innerHTML = '<strong>Total CNI</strong>';
+            totalCNIRow.insertCell().textContent = 'Total à soustraire';
+            totalCNIRow.insertCell().innerHTML = `<strong>${CNI.toLocaleString('fr-FR')}</strong>`;
+            totalCNIRow.style.backgroundColor = '#ffe6e6';
 
-        // 3. Calculer les Charges Supplétives (CS)
-        const CS_remunerationCapital = CAPITAL_SOCIAL * TAUX_CAPITAL; // 160 000
-        const CS_remunerationDirigeant = 1200000; // Mentionné dans les informations complémentaires
-        const totalCS = CS_remunerationCapital + CS_remunerationDirigeant;
 
-        // 4. Calculer les Charges Incorporables (CAGE)
-        const chargesIncorporables = totalChargesGenerales - totalCNI + totalCS;
-        // 690 000 - 165 000 + 1 360 000 = 1 885 000 FCFA
+            // --- Étape 3: Calcul CS ---
+            // A. RTCP
+            const capital = 2000000;
+            const tauxAnnuel = 8;
+            const periodeMois = 3;
+            const RTCP = (capital * tauxAnnuel * periodeMois) / 1200; // 40 000
+            document.getElementById('result-rtcp').textContent = RTCP.toLocaleString('fr-FR') + ' p';
 
-        // === RENDU HTML ===
-        
-        function formatFCFA(montant) {
-            return montant.toLocaleString('fr-FR') + ' ' + UNITE_MONETAIRE;
-        }
+            // B. RFE
+            const remunerationSemestrielle = 1200000;
+            const RFE = remunerationSemestrielle * (3 / 6); // 600 000
+            document.getElementById('result-rfe').textContent = RFE.toLocaleString('fr-FR') + ' p';
 
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // Remplissage du Tableau des Charges Générales
-            const tbodyCG = document.querySelector('#table-charges-generales tbody');
-            for (const [intitule, montant] of Object.entries(donneesCharges)) {
-                const row = tbodyCG.insertRow();
-                const compte = intitule.split(':').trim();
-                const nom = intitule.split(':').trim();
-                row.insertCell().textContent = compte;
-                row.insertCell().textContent = nom;
-                row.insertCell().textContent = formatFCFA(montant);
-            }
-            document.getElementById('total-cg').textContent = formatFCFA(totalChargesGenerales);
+            // Total CS
+            const CS = RTCP + RFE; // 640 000
+            document.getElementById('result-cs').textContent = CS.toLocaleString('fr-FR') + ' p';
 
-            // Remplissage du Tableau CNI
-            document.getElementById('cni-financiers').textContent = formatFCFA(CNI_fraisFinanciers);
-            document.getElementById('cni-provisions').textContent = formatFCFA(CNI_provisions);
-            document.getElementById('cni-taxes').textContent = formatFCFA(CNI_taxesSousActivite);
-            document.getElementById('total-cni').textContent = formatFCFA(totalCNI);
+            // --- Étape 4: Calcul CAGE ---
+            const CAGE = TCG - CNI + CS; // 1 328 250
 
-            // Remplissage du Tableau CS
-            document.getElementById('cs-capital').textContent = formatFCFA(CS_remunerationCapital);
-            document.getElementById('cs-dirigeant').textContent = formatFCFA(CS_remunerationDirigeant);
-            document.getElementById('total-cs').textContent = formatFCFA(totalCS);
-
-            // Affichage du Résultat Final
-            document.getElementById('resultat-final').textContent = formatFCFA(chargesIncorporables);
+            document.getElementById('final-tcg-calc').textContent = TCG.toLocaleString('fr-FR');
+            document.getElementById('final-cni-calc').textContent = CNI.toLocaleString('fr-FR');
+            document.getElementById('final-cs-calc').textContent = CS.toLocaleString('fr-FR');
+            document.getElementById('result-final-cage').textContent = CAGE.toLocaleString('fr-FR') + ' p';
         });
     </script>
 </body>
 </html>
+```
